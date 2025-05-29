@@ -6,4 +6,5 @@ import com.unimagdalena.citas.model.User;
 
 public interface UserService {
     User register(UserRegisterDTO dto);
+    User getUserInfo(long userId);
 }

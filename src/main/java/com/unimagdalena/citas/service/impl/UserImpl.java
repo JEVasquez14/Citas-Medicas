@@ -42,4 +42,7 @@ public class UserImpl implements UserService {
         user.setRole(role);
         return userRepository.save(user);
     }
+    public User getUserInfo(long userId){
+        return userRepository.findById(userId).get();
+    }
 }

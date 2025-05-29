@@ -1,8 +1,10 @@
 package com.unimagdalena.citas.controller;
 
+import com.unimagdalena.citas.dto.consultroom.ConsultRoomResponseDTO;
 import com.unimagdalena.citas.dto.token.TokenDTOResponse;
 import com.unimagdalena.citas.dto.user.UserLoginDTORequest;
 import com.unimagdalena.citas.dto.user.UserRegisterDTO;
+import com.unimagdalena.citas.dto.user.UserRegisterDTOResponse;
 import com.unimagdalena.citas.service.UserService;
 import com.unimagdalena.citas.service.impl.AuthService;
 import org.slf4j.Logger;
@@ -39,4 +41,5 @@ public class AuthController {
         logger.info("Login exitoso para el usuario: {}", loginDetails.email());
         return ResponseEntity.ok(response);
     }
+
 }

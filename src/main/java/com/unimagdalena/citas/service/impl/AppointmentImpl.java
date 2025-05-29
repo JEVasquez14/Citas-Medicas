@@ -6,10 +6,7 @@ import com.unimagdalena.citas.dto.appointment.UpdateAppointmentDTO;
 import com.unimagdalena.citas.exception.ConflictException;
 import com.unimagdalena.citas.exception.ResourceNotFoundException;
 import com.unimagdalena.citas.mapper.AppointmentMapper;
-import com.unimagdalena.citas.model.Appointment;
-import com.unimagdalena.citas.model.ConsultRoom;
-import com.unimagdalena.citas.model.Doctor;
-import com.unimagdalena.citas.model.Patient;
+import com.unimagdalena.citas.model.*;
 import com.unimagdalena.citas.repository.AppointmentRepository;
 import com.unimagdalena.citas.repository.ConsultRoomRepository;
 import com.unimagdalena.citas.repository.DoctorRepository;
@@ -53,6 +50,7 @@ public class AppointmentImpl implements AppointmentService {
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
         appointment.setConsultRoom(consultRoom);
+        appointment.setStatus(AppointmentStatus.SCHEDULED);
 
         return appointmentMapper.toResponse(appointmentRepository.save(appointment));
     }

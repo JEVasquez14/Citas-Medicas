@@ -1,6 +1,7 @@
 package com.unimagdalena.citas.repository;
 
 import com.unimagdalena.citas.model.Doctor;
+import com.unimagdalena.citas.model.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +15,8 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     Optional<Doctor> findByFullName(String fullName);
 
     List<Doctor> findBySpecialty(String specialty);
+
+    List<Doctor> findAll();
 
     @Query("SELECT d FROM Doctor d WHERE d.availableFrom <= :startTime AND d.availableTo >= :endTime")
     List<Doctor> findAvailableDoctors(@Param("startTime") LocalTime startTime,

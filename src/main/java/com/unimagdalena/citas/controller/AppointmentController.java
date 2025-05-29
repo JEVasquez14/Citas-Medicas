@@ -36,7 +36,7 @@ public class AppointmentController {
 
     @PutMapping("/{id}")
     public ResponseEntity<AppointmentResponseDTO> updateAppointment(@PathVariable Long id,
-                                                                    @Valid @RequestBody UpdateAppointmentDTO dto) {
+                                                                    @RequestBody UpdateAppointmentDTO dto) {
         AppointmentResponseDTO updatedAppointment = appointmentService.updateAppointment(id, dto);
         return ResponseEntity.ok(updatedAppointment);
     }

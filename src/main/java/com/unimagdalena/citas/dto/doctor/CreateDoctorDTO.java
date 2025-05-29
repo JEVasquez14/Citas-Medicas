@@ -1,6 +1,7 @@
 package com.unimagdalena.citas.dto.doctor;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -12,14 +13,14 @@ import java.time.LocalTime;
 @Builder
 public class CreateDoctorDTO {
 
-    @NotNull
+    @NotBlank
     private String fullName;
 
-    @NotNull
+    @NotBlank
     @Email
     private String email;
 
-    @NotNull
+    @NotBlank
     private String specialty;
 
     @NotNull

@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DoctorImpl implements DoctorService {
 
-    private DoctorRepository doctorRepository;
-    private DoctorMapper doctorMapper;
+    private final DoctorRepository doctorRepository;
+    private final DoctorMapper doctorMapper;
 
     @Override
     public DoctorResponseDTO createDoctor(CreateDoctorDTO doctorCreateDTO) {

@@ -14,16 +14,12 @@ import java.time.LocalDateTime;
 @Builder
 public class UpdateAppointmentDTO {
 
-    @NotNull
     private Long patientId;
 
-    @NotNull
     private Long doctorId;
 
-    @NotNull
     private AppointmentStatus status;
 
-    @NotNull
     private Long consultRoomId;
 
     @FutureOrPresent

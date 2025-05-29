@@ -1,5 +1,6 @@
 package com.unimagdalena.citas.dto.appointment;
 
+import com.unimagdalena.citas.model.AppointmentStatus;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
@@ -12,8 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class CreateAppointmentDTO {
-    private Long id;
-
     @NotNull
     private Long patientId;
 
@@ -30,4 +29,6 @@ public class CreateAppointmentDTO {
     @NotNull
     @Future
     private LocalDateTime endTime;
+
+    private AppointmentStatus status;
 }
