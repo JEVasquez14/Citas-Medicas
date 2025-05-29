@@ -100,7 +100,9 @@ public class AppointmentImpl implements AppointmentService {
             appointment.setStartTime(dto.getStartTime());
             appointment.setEndTime(dto.getEndTime());
         }
-
+        if (dto.getStatus() != null) {
+            appointment.setStatus(dto.getStatus());
+        }
         return appointmentMapper.toResponse(appointmentRepository.save(appointment));
     }
 
