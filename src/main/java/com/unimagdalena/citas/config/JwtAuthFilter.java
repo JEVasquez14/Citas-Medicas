@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -31,39 +33,52 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            logger.debug("Processing authorization header");
 
-        if(request.getServletPath().contains("/auth")){
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        final String header = request.getHeader("Authorization");
-        final String token;
-        final String email;
-
-        if(header==null || !header.contains("Bearer ")){
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        token = header.substring(7);
-        email = jwtService.getUsernameFromToken(token);
-
-        if(email!=null && SecurityContextHolder.getContext().getAuthentication()==null){
-            UserDetails user = this.userDetailsService.loadUserByUsername(email);
-            if(jwtService.isTokenValid(token, user)){
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        user,
-                        null,
-                        user.getAuthorities()
-                );
-
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                logger.debug("No Bearer token found in request");
+                filterChain.doFilter(request, response);
+                return;
             }
+
+            String jwtToken = authHeader.substring(7);
+            logger.debug("Processing JWT token");
+
+            if (!jwtService.isTokenValid(jwtToken)) {
+                logger.error("Token is not valid or has expired");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token is not valid or has expired");
+                return;
+            }
+
+            String email = jwtService.extractUsername(jwtToken);
+            logger.debug("Processing user authentication");
+
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                logger.debug("User authenticated successfully");
+
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+                logger.debug("Security context updated");
+            }
+
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            logger.error("Error processing JWT token", e);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Error processing authentication token");
         }
-        filterChain.doFilter(request,response);
     }
 }
